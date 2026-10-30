@@ -1,0 +1,59 @@
+# Ignore everything first, then allow only selected files and directories.
+*
+!*/
+
+# Keep this ignore file itself.
+!.gitignore
+
+# Source code and executable project files.
+!*.py
+!*.sh
+!*.ps1
+!*.bat
+
+# Dependency and project configuration needed to run the code.
+!pyproject.toml
+!setup.py
+!setup.cfg
+!requirements*.txt
+!environment*.yml
+!environment*.yaml
+!Pipfile
+!Pipfile.lock
+!uv.lock
+
+# Model weights and checkpoints.
+!*.pt
+!*.pth
+!*.ckpt
+!*.safetensors
+!*.onnx
+
+# Dataset files.
+!*.npy
+!*.npz
+!*.csv
+!*.tsv
+!*.jsonl
+
+# Explicitly prevent common generated and local files.
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Editors, virtual environments, logs, and generated validation results.
+.idea/
+.vscode/
+.venv/
+venv/
+env/
+*.log
+outputs/
+
+# Documentation is excluded by the requested "code, weights, data" policy.
+*.md
