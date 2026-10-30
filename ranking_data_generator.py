@@ -50,7 +50,7 @@ NUM_ITEMS = 50
 NUM_NOISY_RANKINGS = 10
 
 # Mallows concentration: larger values produce less noise; 0 is uniform noise.
-MALLOWS_THETA = 4.0
+MALLOWS_THETA = 2
 
 # Random seeds. Change them to create a different random dataset.
 TRUE_RANKINGS_SEED = 42

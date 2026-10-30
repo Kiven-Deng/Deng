@@ -23,7 +23,7 @@ SPLIT_SEED = 42
 # ============================================================================
 
 BATCH_SIZE = 32
-NUM_EPOCHS = 10
+NUM_EPOCHS = 20
 MAX_BATCHES = None                 # None trains every batch in each epoch.
 
 LEARNING_RATE = 1.0e-4
