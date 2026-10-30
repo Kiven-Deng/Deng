@@ -23,12 +23,13 @@ from tqdm.auto import tqdm
 
 
 if not __package__:
-    # Running train.py directly does not put the project root on sys.path.
-    # Initialize its package context so relative imports work in both modes.
-    PROJECT_ROOT = Path(__file__).resolve().parents[2]
-    if str(PROJECT_ROOT) not in sys.path:
-        sys.path.insert(0, str(PROJECT_ROOT))
-    __package__ = "kemeny_transformer.model"
+    # Running train.py directly requires the parent directory on sys.path so
+    # relative imports can use this directory as their package.
+    MODULE_DIR = Path(__file__).resolve().parent
+    PACKAGE_PARENT = MODULE_DIR.parent
+    if str(PACKAGE_PARENT) not in sys.path:
+        sys.path.insert(0, str(PACKAGE_PARENT))
+    __package__ = MODULE_DIR.name
 
 from . import train_config as config
 from .architecture import kemeny_transformer
