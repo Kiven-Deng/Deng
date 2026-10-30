@@ -30,6 +30,7 @@ if not __package__:
     __package__ = "kemeny_transformer.model"
 
 from . import train_config as config
+from .ranking_metrics import kendall_tau_distance, rbo_distance, rbo_similarity
 from .train import (
     BASE_DIR,
     _select_device,
@@ -192,6 +193,8 @@ def validate() -> None:
     predictions_zero_based = torch.cat(predicted_batches, dim=0)
     results = []
     exact_matches = 0
+    kendall_tau_distance_sum = 0.0
+    rbo_distance_sum = 0.0
 
     for position, dataset_index in enumerate(selected_indices.tolist()):
         true_ranking = _ranking_list(true_rankings[dataset_index])
@@ -199,13 +202,32 @@ def validate() -> None:
             predictions_zero_based[position]
         )
         exact_match = true_ranking == predicted_ranking
+        kendall_distance = kendall_tau_distance(
+            true_ranking,
+            predicted_ranking,
+        )
+        rbo_similarity_value = rbo_similarity(
+            true_ranking,
+            predicted_ranking,
+            config.RBO_PERSISTENCE,
+        )
+        rbo_distance_value = rbo_distance(
+            true_ranking,
+            predicted_ranking,
+            config.RBO_PERSISTENCE,
+        )
         exact_matches += int(exact_match)
+        kendall_tau_distance_sum += kendall_distance
+        rbo_distance_sum += rbo_distance_value
         record = {
             "sample": position + 1,
             "dataset_index": int(dataset_index),
             "true_ranking": true_ranking,
             "predicted_ranking": predicted_ranking,
             "exact_match": exact_match,
+            "kendall_tau_distance": kendall_distance,
+            "rbo_similarity": rbo_similarity_value,
+            "rbo_distance": rbo_distance_value,
         }
         results.append(record)
         print(json.dumps(record, ensure_ascii=False))
@@ -219,6 +241,11 @@ def validate() -> None:
         "sample_count": sample_count,
         "random_seed": config.VALIDATION_RANDOM_SEED,
         "exact_match_count": exact_matches,
+        "rbo_persistence": config.RBO_PERSISTENCE,
+        "mean_kendall_tau_distance": (
+            kendall_tau_distance_sum / sample_count
+        ),
+        "mean_rbo_distance": rbo_distance_sum / sample_count,
         "predictions": results,
     }
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -229,6 +256,13 @@ def validate() -> None:
 
     print(
         f"Exact matches: {exact_matches}/{sample_count}"
+    )
+    print(
+        "Mean Kendall tau distance: "
+        f"{kendall_tau_distance_sum / sample_count:.6f}"
+    )
+    print(
+        f"Mean RBO distance: {rbo_distance_sum / sample_count:.6f}"
     )
     print(f"Validation results saved: {output_path}")
 

@@ -109,3 +109,6 @@ VALIDATION_RANDOM_SEED = None
 
 VALIDATION_BATCH_SIZE = 32
 VALIDATION_OUTPUT_FILE = "outputs/validation/rankings.json"
+
+# Rank-Biased Overlap persistence. Must satisfy 0 <= RBO_PERSISTENCE < 1.
+RBO_PERSISTENCE = 0.9
